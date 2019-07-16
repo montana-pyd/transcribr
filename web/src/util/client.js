@@ -31,7 +31,6 @@ class Client {
     this.token = token;
   }
   _handleError(error) {
-    console.error(error);
     throw error;
   }
   _handleHTTPError(error) {
@@ -41,8 +40,8 @@ class Client {
     } catch (e) {
       msg = error.response.text;
     }
-    
-    msg = msg.ERROR;
+
+    msg = msg.error;
     throw msg;
   }
   // Requests
@@ -88,7 +87,7 @@ class Client {
   }
   // Authentication
   register(firstName = "", lastName = "", email = "", password = "") {
-    return this.post("/auth/register", {
+    return this.post("/user/register", {
       firstName,
       lastName,
       email,
@@ -104,7 +103,7 @@ class Client {
       .catch(this._handleError);
   }
   login(email = "", password = "") {
-    return this.post("/auth/login", {
+    return this.post("/user/login", {
       email,
       password
     })
@@ -119,10 +118,8 @@ class Client {
   }
   uploadFiles(files) {
     let form = new FormData();
-
     form.append('file', files);
     form.append("filename", "Sam");
-    console.log(files);
     return this.post('/transcribe', form, {
       "Content-Type": null,
     })

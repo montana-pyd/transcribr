@@ -120,17 +120,6 @@ export default class UserStore {
 
     return isValid;
   }
-  public async setUserOrgContextId(userId: string, orgContextId: string, orgRole: string): Promise<IUser> {
-    let user: IUser;
-
-    try {
-      user = await User.findOneAndUpdate({ _id: userId }, { $set: { orgContextId, orgRole } }, { new: true});
-    } catch (e) {
-      return Promise.reject(new UserStore.OPERATION_UNSUCCESSFUL());
-    }
-
-    return user;
-  }
   public async forgotPassword(email: string, forgotPasswordCode: string): Promise<boolean> {
     let put: UpdateWriteOpResult['result'];
 

@@ -1,10 +1,10 @@
 import { Router, Request, Response } from 'express';
-// import jwt from 'jsonwebtoken';
+import jwt from 'jsonwebtoken';
 // import uuid4 from 'uuid/v4';
 import Joi from 'joi';
 import UserStore from '../stores/UserStore';
 import IUser from '../interfaces/IUser';
-// import { JWT_SECRET, ADMIN_UI_BASE_URL } from './../env';
+import { JWT_SECRET } from './../env';
 
 export default class UserController {
   public path = '/user';
@@ -16,7 +16,11 @@ export default class UserController {
   }
   private initializeRoutes() {
     this.router.post('/register', this.register);
-    // this.router.post('/login', this.login);
+    this.router.post('/login', this.login);
+  }
+
+  private generateJWT = (user: IUser): string => {
+    return jwt.sign({ _id: user._id, email: user.email }, JWT_SECRET);
   }
   
   public register = async (request: Request, response: Response) => {
@@ -33,31 +37,33 @@ export default class UserController {
 
     if (params.error) {
       console.error(params.error);
-      return response.status(400).json(params.error);
+      return response.status(400).json({
+        error: params.error.details[0].message,
+      });
     }
 
-  /**
-   * Make sure that there isn't an existing account
-   * associated with this email address
-   */
-
+    /**
+    * Make sure that there isn't an existing account
+    * associated with this email address
+    */
     let existingUser: IUser;
     try {
       existingUser = await this.storage.findByEmail(email);
 
       if (existingUser && existingUser.email) {
-        throw new Error('An account with email already exists.');
+        throw new Error('An account with this email already exists.');
       }
 
     } catch (e) {
       console.error(e);
-      return response.status(400).json(e);
+      return response.status(400).json({
+        error: e.message,
+      });
     }
 
     /**
-   * Save the user to storage
-   */
-
+    * Save the user to storage
+    */
     const attributes: IUser = {
       email,
       password,
@@ -67,15 +73,75 @@ export default class UserController {
       createdAt: Date.now(),
     };
 
-    let user: IUser;
     try {
-      user = await this.storage.createUser(attributes);
-      return response.status(200).json(user);
+      let user = await this.storage.createUser(attributes);
+      let token = this.generateJWT(user);
+      return response.status(200).json({
+        user,
+        token,
+      });
     } catch (e) {
       console.error(e);
-      return response.status(400).json(e);
+      return response.status(400).json({
+        error: e.message,
+      });
+    }
+  }
+
+  public login = async (request: Request, response: Response) => {
+    const schema = Joi.object().keys({
+      email: Joi.string().email().required(),
+      password: Joi.string().required(),
+    });
+
+    const params = Joi.validate(request.body, schema);
+    const { email, password } = params.value;
+
+    if (params.error) {
+      console.error(params.error);
+      return response.status(400).json({
+        error: params.error.details[0].message,
+      });
     }
 
+    /**
+    * Make sure that there is an existing account
+    * associated with this email address
+    */
+    let user: IUser;
+    try {
+      user = await this.storage.findByEmail(email);
+
+      if (!user || !user.email) {
+        throw new Error('An account with this email does not exist.');
+      }
+
+    } catch (e) {
+      console.error(e);
+      return response.status(400).json({
+        error: e.message,
+      });
+    }
+
+    try {
+      let isValidPassword = await this.storage.comparePasswordHash(password, user.passwordHash);  
+
+      if(!isValidPassword) {
+        throw new Error('Invalid Password.');
+      }
+
+      let token = this.generateJWT(user);
+      
+      return response.status(200).json({
+        user,
+        token,
+      });
+    } catch (e) {
+      console.error(e);
+      return response.status(400).json({
+        error: e.message,
+      });
+    }
   }
 
 }

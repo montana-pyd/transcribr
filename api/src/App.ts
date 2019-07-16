@@ -1,6 +1,13 @@
 import express, { Application } from 'express';
 import { json } from 'body-parser';
 
+function cors(req, res, next) {
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
+  res.header('Access-Control-Allow-Headers', '*');
+  next();
+}
+
 export default class Transcriber {
   public app: Application;
   public port: number;
@@ -15,6 +22,7 @@ export default class Transcriber {
 
   private initializeMiddlewares() {
     this.app.use(json());
+    this.app.use(cors);
   }
 
   private initializeControllers(controllers) {

@@ -1,6 +1,6 @@
-import Transcriber from './Transcriber';
+import App from './App';
 import UserController from './controllers/UserContoller';
 
-new Transcriber([
+new App([
   new UserController(),
 ], 3001).listen();
