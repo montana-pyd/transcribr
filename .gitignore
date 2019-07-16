@@ -1,2 +1,5 @@
-.DS_Store
-translate_files/
+*/.DS_Store
+*/translate_files/
+db/
+*/.dist/*
+*/node_modules/*
