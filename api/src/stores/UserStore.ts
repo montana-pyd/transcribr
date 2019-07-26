@@ -26,7 +26,7 @@ export default class UserStore {
       passwordHash: Joi.string().required(),
       firstName: Joi.string().required(),
       lastName: Joi.string().required(),
-      phoneNumber: Joi.string().required(),
+      phoneNumber: Joi.string().optional(),
       createdAt: Joi.number().required(),
     });
 

@@ -1,9 +1,17 @@
 import React, { Component } from 'react';
-import './../styles/Login.scss';
 import { Link } from 'react-router-dom';
-import client from "./../util/client";
+import client from './../util/client';
+import { Page } from './../styles/App';
+import Input from './../components/Input';
+import Button from './../components/Button';
+import {
+  Container,
+  Form,
+  Header,
+  Text,
+} from './../styles/containers/Auth';
 
-class Register extends Component {
+export default class Register extends Component {
   constructor() {
     super();
 
@@ -45,28 +53,55 @@ class Register extends Component {
   }
   render() {
     return (
-      <div className='Login FlexColumn JustifyCenter AlignCenter' onKeyPress={e => {
+      <Page onKeyPress={e => {
         if(e.which === 13) {
           this.register();
         }
       }}>
-        <div className="LargeText">Register below or <Link className="LargeText" to="/login">login</Link></div>
-        <div className="LoginForm FlexColumn JustifyCenter AlignCenter">
-          <input autoFocus value={this.state.firstName} placeholder="First Name" onChange={e => this.setField(e.target.value, 'firstName')} type="text" />
-          <input value={this.state.lastName} placeholder="Last Name" onChange={e => this.setField(e.target.value, 'lastName')} type="text" />
-          <input value={this.state.email} placeholder="Email" onChange={e => this.setField(e.target.value, 'email')} type="text" />
-          <input value={this.state.password} placeholder="Password" onChange={e => this.setField(e.target.value, 'password')} type="password" />
-          <div className="Button" onClick={() => this.register()}>
-            Register
-          </div>
-          <div className="Button" onClick={(() => this.props.history.push('/'))}>
-            Home
-          </div>
-          {this.renderError()}
-        </div>
-      </div>
+        <Container>
+          <Form>
+            <Header>Register</Header>
+            <Input 
+              autoFocus
+              fluid 
+              value={this.state.firstName} 
+              placeholder="First Name" onChange={e => this.setField(e.target.value, 'firstName')} 
+              type="text" 
+            />
+            <Input
+              fluid 
+              value={this.state.lastName} 
+              placeholder="Last Name" onChange={e => this.setField(e.target.value, 'lastName')} 
+              type="text" 
+            />
+            <Input
+              fluid 
+              value={this.state.email} 
+              placeholder="Email" 
+              onChange={e => this.setField(e.target.value, 'email')} 
+              type="text" 
+            />
+            <Input
+              fluid 
+              value={this.state.password} 
+              placeholder="Password" 
+              onChange={e => this.setField(e.target.value, 'password')} 
+              type="password" 
+            />
+            <Button
+              fluid
+              onClick={(() => this.register())}
+              color="green"
+            >
+              Register
+            </Button>
+            {this.renderError()}
+            <Text>
+              Already have an account? <Link to="/login">Login</Link>
+            </Text>
+          </Form>
+        </Container>
+      </Page>
     );
   }
 }
-
-export default Register;

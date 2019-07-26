@@ -29,7 +29,7 @@ export default class UserController {
       password: Joi.string().required(),
       firstName: Joi.string().required(),
       lastName: Joi.string().required(),
-      phoneNumber: Joi.string().required(),
+      phoneNumber: Joi.string().optional(),
     });
 
     const params = Joi.validate(request.body, schema);

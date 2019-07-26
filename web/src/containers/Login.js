@@ -1,15 +1,23 @@
 import React, { Component } from 'react';
-import './../styles/Login.scss';
 import { Link } from 'react-router-dom';
 import client from './../util/client';
+import { Page } from './../styles/App';
+import Input from './../components/Input';
+import Button from './../components/Button';
+import {
+  Container,
+  Form,
+  Header,
+  Text,
+} from './../styles/containers/Auth';
 
-class Login extends Component {
+export default class Login extends Component {
   constructor() {
     super();
     
     this.state = {
-      email: 'samheutmaker@gmail.com',
-      password: 'kingpin13',
+      email: '',
+      password: '',
       error: null,
     };
   }
@@ -43,26 +51,43 @@ class Login extends Component {
   }
   render() {
     return (
-      <div className='Login FlexColumn JustifyCenter AlignCenter' onKeyPress={e => {
+      <Page onKeyPress={e => {
         if (e.which === 13) {
           this.login();
         }
       }}>
-        <div className="LargeText">Login below or <Link className="LargeText" to="/register">register</Link></div>
-        <div className="LoginForm FlexColumn JustifyCenter AlignCenter">
-          <input autoFocus value={this.state.email} placeholder="Email" onChange={e => this.setField(e.target.value, 'email')} type="text" />
-          <input value={this.state.password} placeholder="Password" onChange={e => this.setField(e.target.value, 'password')} type="password" />
-          <div className="Button" onClick={(() => this.login())}>
-            Login
-          </div>
-          <div className="Button" onClick={(() => this.props.history.push('/'))}>
-            Home
-          </div>
-          {this.renderError()}
-        </div>
-      </div>
+        <Container>
+          <Form>
+            <Header>Login</Header>
+            <Input 
+              fluid
+              autoFocus 
+              value={this.state.email} 
+              placeholder="Email" 
+              onChange={e => this.setField(e.target.value, 'email')} 
+              type="email" 
+            />
+            <Input 
+              fluid
+              value={this.state.password} 
+              placeholder="Password" 
+              onChange={e => this.setField(e.target.value, 'password')} 
+              type="password" 
+            />
+            <Button 
+              fluid 
+              onClick={(() => this.login())} 
+              color="green"
+            >
+              Login
+            </Button>
+            {this.renderError()}
+            <Text>
+              Need an account? <Link to="/register">Register</Link>
+            </Text>
+          </Form>
+        </Container>
+      </Page >
     );
   }
 }
-
-export default Login;
