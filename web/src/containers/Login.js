@@ -87,7 +87,7 @@ export default class Login extends Component {
             </Text>
           </Form>
         </Container>
-      </Page >
+      </Page>
     );
   }
 }
