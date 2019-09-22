@@ -65,7 +65,7 @@ export const UserSchema  = new Schema({
 
 export const User: Model<IUserModel> = model<IUserModel>('User', UserSchema);
 
-connect(`mongodb://${MONGO_DB_HOST}:${MONGO_DB_PORT}`, {
+connect(`mongodb://${MONGO_DB_HOST}:${MONGO_DB_PORT}/admin`, {
   useNewUrlParser: true,
 })
 .then(() => {

@@ -38,7 +38,7 @@ export const PaymentInfoSchema = new Schema({
 
 export const PaymentInfo: Model<IPaymentInfoModel> = model<IPaymentInfoModel>('PaymentInfo', PaymentInfoSchema);
 
-connect(`mongodb://${MONGO_DB_HOST}:${MONGO_DB_PORT}`, {
+connect(`mongodb://${MONGO_DB_HOST}:${MONGO_DB_PORT}/admin`, {
   useNewUrlParser: true,
 })
   .then(() => {
