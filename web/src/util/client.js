@@ -38,7 +38,9 @@ class Client {
     try {
       msg = JSON.parse(error.response.text);
     } catch (e) {
-      msg = error.response.text;
+      msg = error && error.response 
+        ? error.response.text 
+        : { error: 'An error occured while processing the request.'};
     }
 
     msg = msg.error;

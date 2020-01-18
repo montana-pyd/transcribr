@@ -14,7 +14,6 @@ import {
 export default class Register extends Component {
   constructor() {
     super();
-
     this.state = {
       firstName: '',
       lastName: '',
@@ -37,6 +36,7 @@ export default class Register extends Component {
         this.props.history.push('/dashboard');
       })
       .catch(err => {
+        console.log(err);
         this.setState({
           error: err,
         });
